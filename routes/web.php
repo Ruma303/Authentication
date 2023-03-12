@@ -21,6 +21,10 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::get('info-user', [App\Http\Controllers\UserController::class, 'getInfo']);
+Route::get('info-user', [App\Http\Controllers\UserController::class, 'getInfo'])
+->middleware('guest');
+
+Route::post('info-user', [App\Http\Controllers\UserController::class, 'manualLogin'])
+    ->name('manual.login');
 
 require __DIR__.'/auth.php';

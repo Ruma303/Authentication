@@ -7,15 +7,24 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function __construct()
+
+    public function getInfo()
     {
-        $this->middleware('auth');
+        return view('manual-login');
     }
 
-
-    public function getInfo(Request $request)
+    public function manualLogin(Request $request)
     {
-        //$isAuth = $request->user();
-        dd(Auth::id());
+        $privateData = $request->only('email', 'password');
+        if(Auth::attempt($privateData)) {
+            //* Risposta booleana
+            $request->session()->regenerate();
+            return redirect()->intended('dashboard'); //% URI
+        }
+
+        return redirect()->back()->withErrors([
+            'email' => 'Email sbagliata o non presente nel nostro database',
+            'password' => 'Password sbagliata o non presente nel nostro database'
+        ]);
     }
 }
